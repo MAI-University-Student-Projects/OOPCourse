@@ -10,52 +10,31 @@
 
 class vector3D {
 public:
+//    vector3D() = default;
     vector3D() : vector3D(0.0, 0.0, 0.0) { }
     explicit vector3D(double x, double y, double z) : _crdVec{x, y, z} {}
-    explicit vector3D(const std::array<double, 3>& arr_3d) : _crdVec(arr_3d) {}
-    
+//    vector3D(const vector3D&) = default;
+    // This is the preferred method to copy raw arrays in C++ and works with all types that can be copied
+    // memcopy(_crdVec, oth._crdVec, 3*sizeof(double)) // C-style raw copying
     vector3D(const vector3D& oth) {
-        std::copy(oth._crdVec.cbegin(), oth._crdVec.cend(), _crdVec.begin());
-    }
-    vector3D(vector3D&& oth) : vector3D() {
-        swap(*this, oth);
+        std::copy(oth._crdVec, oth._crdVec + 3, _crdVec);
     }
     
-    /* with lvalue: copy-constructed in argument
-     with rvalue: move-constructed in argument */
-    vector3D& operator=(vector3D oth) {
-        swap(*this, oth);
-        return *this;
-    }
-    friend void swap(vector3D& vec_frst, vector3D& vec_scnd) {
-        std::swap(vec_frst._crdVec, vec_scnd._crdVec);
-    }
+    /* no resources (sthing to be managed like heap allocs to be deleted, files to be closed e.t.c) - no move semantics
+     std::array<_T, _Num> can be moved (and has move constructor itself) if _T - is movable type (like string); int, double, other primitives and some types are not movable*/
+    vector3D& operator=(const vector3D& oth); // .cpp
+//    vector3D& operator=(const vector3D& oth) = default;
     
     double& operator[](const size_t i);
     const double& operator[](const size_t i) const;
-    vector3D& operator+=(const vector3D& oth) {
-        std::transform(_crdVec.cbegin(), _crdVec.cend(), oth._crdVec.begin(), _crdVec.begin(), std::plus<>());
-        return *this;
-    }
-    vector3D& operator-=(const vector3D& oth) {
-        std::transform(_crdVec.cbegin(), _crdVec.cend(), oth._crdVec.begin(), _crdVec.begin(), std::minus<>());
-        return *this;
-    }
-    vector3D& operator*=(double cf) {
-        std::transform(_crdVec.cbegin(), _crdVec.cend(), _crdVec.begin(), [cf](double x) { return cf * x;});
-        return *this;
-    }
+    vector3D& operator+=(const vector3D& oth);
+    vector3D& operator-=(const vector3D& oth);
+    vector3D& operator*=(double cf);
     
     friend vector3D operator+(const vector3D& lhs, const vector3D& rhs);
     friend vector3D operator-(const vector3D& lhs, const vector3D& rhs);
     friend vector3D operator*(double lhs, const vector3D& rhs);
-    
-    // _Tp __init - 4-th arg in inner_product, takes initial value to sum elements of structure with
-    friend double operator*(const vector3D& lhs, const vector3D& rhs) {
-        return std::inner_product(lhs._crdVec.cbegin(), lhs._crdVec.cend(), rhs._crdVec.cbegin(), 0.0);
-    }
-    // std::transform_reduce (c++17) - parallelized version for std::inner_product ar std::reduce() for std::accumulate
-    // first arg - execution policy, could stay empty (parallel policy) or std::execution::seq(sequenced) or any other policy
+    friend double operator*(const vector3D& lhs, const vector3D& rhs);
     
     friend vector3D operator^(const vector3D& lhs, const vector3D& rhs) {
         return vector3D(lhs[1]*rhs[2] - lhs[2]*rhs[1], lhs[2]*rhs[0] - lhs[0]*rhs[2], lhs[0]*rhs[1] - lhs[1]*rhs[0]);
@@ -69,15 +48,23 @@ public:
         return (*this - oth).getLength() < 1e-12;
     }
     
-    friend bool operator==(const vector3D& lhs, const vector3D& rhs) { return lhs._crdVec == rhs._crdVec; }
-    friend std::ostream& operator<<(std::ostream& os, const vector3D& vec) {
-        std::for_each(vec._crdVec.cbegin(), vec._crdVec.cend(), [&](double x) { os << x << ' '; });
-        return os;
-    }
+    friend bool operator==(const vector3D& lhs, const vector3D& rhs);
+    friend std::ostream& operator<<(std::ostream& os, const vector3D& vec);
     
-    ~vector3D() {}
+    ~vector3D() = default;
 private:
-    std::array<double, 3> _crdVec;
+    double _crdVec[3];
 };
 
 #endif
+
+/* implementation in header := implicitly inline method
+ with '#include' directive compiler copies its resources to other files so
+ inline means that in different transition units method-code will be copied inplace & not executed by CALL (actually there is a special 'inline' keyword)
+
+ we exchange run-time with compile-time so in some cases it could be optimization of runtime (ex. one-line methods)
+ conclusion: slower compiling, need more memory usage, but faster running
+
+ other usage - templates: compiler generates different type definitions for template class in compile-time depending on template-class usage in code */
+
+

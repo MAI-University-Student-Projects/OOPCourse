@@ -1,18 +1,21 @@
 #include <catch2/catch_all.hpp>
 #include "../../src/structures/vector3D.h"
 
+using namespace Catch::literals;
+
 //TEST_CASE(name of test case, tags for selecting what test cases to run)
 TEST_CASE("vector3D tests", "[struct][vector3D]") {
     vector3D vec_main(1, 1, 1);
     vector3D vec_oth(2, 3, 4);
     SECTION("Basic operations") {
-        REQUIRE(vec_main[0] == Catch::Approx(1.0).margin(1e-12));
-        REQUIRE(vec_main[1] == Catch::Approx(1.0).margin(1e-12));
-        REQUIRE(vec_main[2] == Catch::Approx(1.0).margin(1e-12));
+        REQUIRE(vec_main[0] == (1.0_a).margin(1e-12));
+        REQUIRE(vec_main[1] == (1.0_a).margin(1e-12));
+        REQUIRE(vec_main[2] == (1.0_a).margin(1e-12));
         REQUIRE_FALSE((vec_main == vec_oth));
         
         vec_main[0] = 5;
-        REQUIRE(vec_main[0] == Catch::Approx(5.0).margin(1e-12));
+        REQUIRE(vec_main[0] == (5.0_a).margin(1e-12));
+        CHECK_THROWS_AS(vec_main[-1] == (5.0_a).margin(1e-12), std::out_of_range);
     }
     //REQUIRE - stops running if failed
     //CHECK - continue running even if failed
