@@ -8,7 +8,7 @@ Rhombus& Rhombus::operator=(const Rhombus& oth) {
     return *this;
 }
 
-std::pair<int, int> Rhombus::getMassCenter() const {
+std::pair<double, double> Rhombus::getMassCenter() const {
     
 }
 

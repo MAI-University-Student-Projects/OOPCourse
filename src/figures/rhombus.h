@@ -20,7 +20,9 @@ public:
     Rhombus& operator=(const Rhombus& oth);
     
     double getArea() const override { return 0.5*std::get<0>(_lenDiags)*std::get<1>(_lenDiags); }
-    std::pair<int, int> getMassCenter() const override;
+    std::pair<double, double> getMassCenter() const override {
+        return { std::get<0>(_topLeft) + std::get<0>(_lenDiags), //проблема с ориентацией ромба в прос-ве
+    }
     
     friend std::istream& operator>>(std::istream& is, Rhombus& fig);
     friend std::ostream& operator<<(std::ostream& is, const Rhombus& fig);

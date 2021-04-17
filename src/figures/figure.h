@@ -9,7 +9,7 @@
 class Figure {
 public:
     virtual double getArea() const = 0;
-    virtual std::pair<int, int> getMassCenter() const = 0;
+    virtual std::pair<double, double> getMassCenter() const = 0;
     
     friend bool operator<(const Figure& lhs, const Figure& rhs) { return lhs.getArea() < rhs.getArea(); }
     friend bool operator>(const Figure& lhs, const Figure& rhs) { return lhs.getArea() < rhs.getArea(); }

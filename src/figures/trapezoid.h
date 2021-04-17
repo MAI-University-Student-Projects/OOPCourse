@@ -19,7 +19,7 @@ public:
     // no resource managment (std::pair and no-move-type int) - no move
     
     double getArea() const override { return 0.5 * (std::get<0>(_lenWidths) + std::get<1>(_lenWidths)) * _height; }
-    std::pair<int, int> getMassCenter() const override;
+    std::pair<double, double> getMassCenter() const override;
     
     friend std::istream& operator>>(std::istream& is, Trapezoid& fig);
     friend std::ostream& operator<<(std::ostream& is, const Trapezoid& fig);

@@ -20,7 +20,7 @@ public:
     Pentagon& operator=(const Pentagon& oth);
     
     double getArea() const override { return 5.0 * std::pow(_lenSide, 2) / (4.0 * std::tan(0.2 * M_PI)); }
-    std::pair<int, int> getMassCenter() const override;
+    std::pair<double, double> getMassCenter() const override;
     
     friend std::istream& operator>>(std::istream& is, Pentagon& fig);
     friend std::ostream& operator<<(std::ostream& is, const Pentagon& fig);

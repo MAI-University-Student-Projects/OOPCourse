@@ -9,7 +9,7 @@ Trapezoid& Trapezoid::operator=(const Trapezoid& oth) {
     return *this;
 }
 
-std::pair<int, int> Trapezoid::getMassCenter() const {
+std::pair<double, double> Trapezoid::getMassCenter() const {
     
 }
 

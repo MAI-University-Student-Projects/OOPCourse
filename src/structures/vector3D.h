@@ -20,8 +20,12 @@ public:
         std::copy(oth._crdVec, oth._crdVec + 3, _crdVec);
     }
     
-    /* no resources (sthing to be managed like heap allocs to be deleted, files to be closed e.t.c) - no move semantics
-     std::array<_T, _Num> can be moved (and has move constructor itself) if _T - is movable type (like string); int, double, other primitives and some types are not movable*/
+    /*
+     A std::array contains its elements embedded directly inside it (not on the heap, referred to by a pointer, like a std::vector does) so you can't move its contents anywhere if std::array doesn't operate resources
+     no resources (sthing to be managed like heap allocs to be deleted, files to be closed e.t.c) - no move semantics
+     std::array<_T, _Num> can be moved (and has move constructor itself) if _T - is movable type (like string); int, double, other primitives and some types are not movable
+     */
+    
     vector3D& operator=(const vector3D& oth); // .cpp
 //    vector3D& operator=(const vector3D& oth) = default;
     

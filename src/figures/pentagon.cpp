@@ -8,7 +8,7 @@ Pentagon& Pentagon::operator=(const Pentagon& oth) {
     return *this;
 }
 
-std::pair<int, int> Pentagon::getMassCenter() const {
+std::pair<double, double> Pentagon::getMassCenter() const {
     //auto res = std::make_pair(...)
 }
 
